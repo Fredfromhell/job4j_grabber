@@ -1,4 +1,4 @@
-#                                                        job4j_design <center>
+#                                                        job4j_grabber <center>
 
 ![ScreenShot](java1.png)
 
