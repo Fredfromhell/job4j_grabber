@@ -45,7 +45,7 @@ public class AlertRabbit {
     public static class Rabbit implements Job {
         @Override
         public void execute(JobExecutionContext context) throws JobExecutionException {
-            System.out.println("Rabbit runs here ...");
+            System.out.println("Rabbit runs here ....");
         }
     }
 }
