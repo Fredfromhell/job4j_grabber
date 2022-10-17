@@ -30,15 +30,15 @@ public class AlertRabbit {
     }
 
     public static void main(String[] args) throws ClassNotFoundException {
-        int repeatTime = Integer.parseInt(readProperties().
+        Properties config = readProperties();
+        int repeatTime = Integer.parseInt(config.
                 getProperty("rabbit.interval"));
-        Class.forName(readProperties().getProperty("jdbc.driver"));
-        try {
-                Connection connect = DriverManager.getConnection(
-                readProperties().getProperty("jdbc.url"),
-                readProperties().getProperty("jdbc.username"),
-                readProperties().getProperty("jdbc.password"));
-
+        Class.forName(config.getProperty("jdbc.driver"));
+        try (Connection connect = DriverManager.getConnection(
+                config.getProperty("jdbc.url"),
+                config.getProperty("jdbc.username"),
+                config.getProperty("jdbc.password")
+        )) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
