@@ -28,24 +28,26 @@ public class HabrCareerParse implements Parse {
 
     }
 
-//    public static void main(String[] args) throws IOException {
-//        for (int i = 1; i <= NUMBER_OF_PAGES; i++) {
-//            Connection connection = Jsoup.connect(PAGE_LINK + "?page=" + i);
-//            Document document = connection.get();
-//            Elements rows = document.select(".vacancy-card__inner");
-//            rows.forEach(row -> {
-//                Element titleElement = row.select(".vacancy-card__title").first();
-//                Element linkElement = titleElement.child(0);
-//                Element dateElement = row.select(".vacancy-card__date").first();
-//                String vacancyName = titleElement.text();
-//                Element date1 = dateElement.child(0);
-//                String date = date1.attr("datetime");
-//                String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-//                HabrCareerDateTimeParser validDate = new HabrCareerDateTimeParser();
-//                System.out.printf("%s %s %s%n", vacancyName, link, validDate.parse(date));
-//            });
-//        }
-//    }
+  /*
+  public static void main(String[] args) throws IOException {
+        for (int i = 1; i <= NUMBER_OF_PAGES; i++) {
+            Connection connection = Jsoup.connect(PAGE_LINK + "?page=" + i);
+            Document document = connection.get();
+            Elements rows = document.select(".vacancy-card__inner");
+            rows.forEach(row -> {
+                Element titleElement = row.select(".vacancy-card__title").first();
+                Element linkElement = titleElement.child(0);
+                Element dateElement = row.select(".vacancy-card__date").first();
+                String vacancyName = titleElement.text();
+                Element date1 = dateElement.child(0);
+                String date = date1.attr("datetime");
+                String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
+                HabrCareerDateTimeParser validDate = new HabrCareerDateTimeParser();
+                System.out.printf("%s %s %s%n", vacancyName, link, validDate.parse(date));
+            });
+        }
+    }
+    */
 
     @Override
     public List<Post> list(String link) {
