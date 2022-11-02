@@ -18,6 +18,14 @@ public class HabrCareerParse {
 
     private static final int NUMBER_OF_PAGES = 5;
 
+    private String retrieveDescription(String link) throws IOException {
+        Connection connection = Jsoup.connect(link);
+        Document document = connection.get();
+        Elements row = document.select(".style-ugc");
+        return row.text();
+
+    }
+
     public static void main(String[] args) throws IOException {
         for (int i = 1; i <= NUMBER_OF_PAGES; i++) {
             Connection connection = Jsoup.connect(PAGE_LINK + "?page=" + i);
@@ -32,7 +40,7 @@ public class HabrCareerParse {
                 String date = date1.attr("datetime");
                 String link = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
                 HabrCareerDateTimeParser validDate = new HabrCareerDateTimeParser();
-                System.out.printf("%s %s %s%n", vacancyName, link, validDate.parse(date));
+                System.out.printf("%s %s $s %s%n", vacancyName, link, validDate.parse(date));
             });
         }
     }
