@@ -20,6 +20,12 @@ public class HabrCareerParse implements Parse {
 
     private static final int NUMBER_OF_PAGES = 1;
 
+    private final DateTimeParser dateTimeParser;
+
+    public HabrCareerParse(DateTimeParser dateTimeParser) {
+        this.dateTimeParser = dateTimeParser;
+    }
+
     private static String retrieveDescription(String link) throws IOException {
         Connection connection = Jsoup.connect(link);
         Document document = connection.get();
@@ -70,10 +76,9 @@ public class HabrCareerParse implements Parse {
                 Element date1 = dateElement.child(0);
                 String date = date1.attr("datetime");
                 String link1 = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
-                HabrCareerDateTimeParser habrCareerDateTimeParser = new HabrCareerDateTimeParser();
                 try {
                     newList.add(new Post(id.get(), vacancyName, link1, retrieveDescription(link1),
-                            habrCareerDateTimeParser.parse(date)));
+                            dateTimeParser.parse(date)));
                     id.getAndIncrement();
 
                 } catch (IOException e) {
@@ -86,7 +91,7 @@ public class HabrCareerParse implements Parse {
     }
 
     public static void main(String[] args) {
-        HabrCareerParse habrCareerParse = new HabrCareerParse();
+        HabrCareerParse habrCareerParse = new HabrCareerParse(new HabrCareerDateTimeParser());
         System.out.println(habrCareerParse.list(PAGE_LINK));
     }
 
