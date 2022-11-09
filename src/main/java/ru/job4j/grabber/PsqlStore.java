@@ -27,7 +27,7 @@ public class PsqlStore implements Store, AutoCloseable {
     public void save(Post post) {
         try (PreparedStatement preparedStatement =
                      cnn.prepareStatement("insert into post (name, text"
-                             + ", link, created) values(?,?,?,?) ")) {
+                             + ", link, created) values(?,?,?,?) on conflict (link) do nothing ")) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
             preparedStatement.setString(3, post.getLink());
@@ -45,11 +45,7 @@ public class PsqlStore implements Store, AutoCloseable {
                      cnn.prepareStatement("select * from post")) {
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
-                    list.add(new Post(resultSet.getInt("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("text"),
-                            resultSet.getString("link"),
-                            (resultSet.getTimestamp("created")).toLocalDateTime()));
+                    list.add(queryPost(resultSet));
                 }
             }
         } catch (SQLException e) {
@@ -66,17 +62,21 @@ public class PsqlStore implements Store, AutoCloseable {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    post = (new Post(resultSet.getInt("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("text"),
-                            resultSet.getString("link"),
-                            (resultSet.getTimestamp("created")).toLocalDateTime()));
+                    post = queryPost(resultSet);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return post;
+    }
+
+    public Post queryPost(ResultSet resultSet) throws SQLException {
+        return new Post(resultSet.getInt("id"),
+                resultSet.getString("name"),
+                resultSet.getString("text"),
+                resultSet.getString("link"),
+                (resultSet.getTimestamp("created")).toLocalDateTime());
     }
 
     @Override
