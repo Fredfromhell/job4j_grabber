@@ -19,7 +19,7 @@ public class PsqlStore implements Store, AutoCloseable {
                     cfg.getProperty("username"),
                     cfg.getProperty("password"));
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Ошибка соеденения");
         }
     }
 
@@ -27,12 +27,19 @@ public class PsqlStore implements Store, AutoCloseable {
     public void save(Post post) {
         try (PreparedStatement preparedStatement =
                      cnn.prepareStatement("insert into post (name, text"
-                             + ", link, created) values(?,?,?,?) on conflict (link) do nothing ")) {
+                             + ", link, created) values(?,?,?,?) on conflict (link) do nothing ",
+                             Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
             preparedStatement.setString(3, post.getLink());
             preparedStatement.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
             preparedStatement.execute();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    post.setId(generatedKeys.getInt(1));
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -86,7 +93,7 @@ public class PsqlStore implements Store, AutoCloseable {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         Properties config = new Properties();
         try (InputStream in = PsqlStore.class.getClassLoader().
                 getResourceAsStream("grabber.properties")) {
@@ -97,11 +104,14 @@ public class PsqlStore implements Store, AutoCloseable {
         HabrCareerParse habrCareerParse = new HabrCareerParse(new HabrCareerDateTimeParser());
         List<Post> list =
                 habrCareerParse.list("https://career.habr.com/vacancies/java_developer?page=");
-        PsqlStore psqlStore = new PsqlStore(config);
-        for (Post post : list) {
-            psqlStore.save(post);
+        try (PsqlStore psqlStore = new PsqlStore(config)) {
+            for (Post post : list) {
+                psqlStore.save(post);
+                System.out.println(psqlStore.getAll());
+                System.out.println(psqlStore.findById(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println(psqlStore.getAll());
-        System.out.println(psqlStore.findById(1));
     }
 }
