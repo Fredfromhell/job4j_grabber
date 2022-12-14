@@ -35,7 +35,8 @@ public class Grabber implements Grab {
     }
 
     public void cfg() {
-        try (InputStream in = Grabber.class.getClassLoader().getResourceAsStream("app.properties")) {
+        try (InputStream in =
+                     Grabber.class.getClassLoader().getResourceAsStream("app.properties")) {
             cfg.load(in);
         } catch (IOException e) {
             LOG.error("Ошибка загрузки конфигурации", e);
@@ -48,7 +49,8 @@ public class Grabber implements Grab {
         data.put("store", store);
         data.put("parse", parse);
         JobDetail job = newJob(GrabJob.class).usingJobData(data).build();
-        SimpleScheduleBuilder times = simpleSchedule().withIntervalInSeconds(Integer.parseInt(cfg.getProperty("time"))).repeatForever();
+        SimpleScheduleBuilder times = simpleSchedule()
+                .withIntervalInSeconds(Integer.parseInt(cfg.getProperty("time"))).repeatForever();
         Trigger trigger = newTrigger().startNow().withSchedule(times).build();
         scheduler.scheduleJob(job, trigger);
     }
