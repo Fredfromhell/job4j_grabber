@@ -5,12 +5,16 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HabrCareerParse implements Parse {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Grabber.class.getName());
 
     private static final String SOURCE_LINK = "https://career.habr.com";
 
@@ -31,7 +35,7 @@ public class HabrCareerParse implements Parse {
         try {
             document = connection.get();
         } catch (IOException e) {
-            throw new IllegalArgumentException(e);
+            LOG.error("Ошибка парсинга описания",e);
         }
         Elements row = document.select(".style-ugc");
         return row.text();
@@ -47,7 +51,7 @@ public class HabrCareerParse implements Parse {
             try {
                 document = connection.get();
             } catch (IOException e) {
-                throw new IllegalArgumentException(e);
+                LOG.error("Ошибка парсига страницы",e);
             }
             Elements rows = document.select(".vacancy-card__inner");
             rows.forEach(row -> {

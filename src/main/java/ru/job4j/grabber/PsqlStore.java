@@ -1,5 +1,8 @@
 package ru.job4j.grabber;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -8,6 +11,8 @@ import java.util.List;
 import java.util.Properties;
 
 public class PsqlStore implements Store, AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Grabber.class.getName());
 
     private Connection cnn;
 
@@ -19,7 +24,7 @@ public class PsqlStore implements Store, AutoCloseable {
                     cfg.getProperty("username"),
                     cfg.getProperty("password"));
         } catch (Exception e) {
-            throw new IllegalStateException("Ошибка соеденения");
+            LOG.error("Ошибка соединения",e);
         }
     }
 
@@ -41,7 +46,7 @@ public class PsqlStore implements Store, AutoCloseable {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Ошибка выполнения запроса save", e);
         }
     }
 
@@ -56,7 +61,7 @@ public class PsqlStore implements Store, AutoCloseable {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Ошибка выполнения запроса getAll",e);
         }
         return list;
     }
@@ -73,7 +78,7 @@ public class PsqlStore implements Store, AutoCloseable {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOG.error("Ошибка выполнения запроса findById",e);
         }
         return post;
     }
