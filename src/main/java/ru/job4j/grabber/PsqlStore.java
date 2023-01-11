@@ -32,7 +32,8 @@ public class PsqlStore implements Store, AutoCloseable {
     public void save(Post post) {
         try (PreparedStatement preparedStatement =
                      cnn.prepareStatement("insert into post (name, text"
-                                     + ", link, created) values(?,?,?,?) on conflict (link) do nothing ",
+                                     + ", link, created) values(?,?,?,?)"
+                                     + " on conflict (link) do nothing ",
                              Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
