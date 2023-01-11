@@ -35,7 +35,7 @@ public class HabrCareerParse implements Parse {
         try {
             document = connection.get();
         } catch (IOException e) {
-            LOG.error("Ошибка парсинга описания",e);
+            LOG.error("Ошибка парсинга описания", e);
         }
         Elements row = document.select(".style-ugc");
         return row.text();
@@ -51,7 +51,7 @@ public class HabrCareerParse implements Parse {
             try {
                 document = connection.get();
             } catch (IOException e) {
-                LOG.error("Ошибка парсига страницы",e);
+                LOG.error("Ошибка парсига страницы", e);
             }
             Elements rows = document.select(".vacancy-card__inner");
             rows.forEach(row -> {

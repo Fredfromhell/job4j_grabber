@@ -24,7 +24,7 @@ public class PsqlStore implements Store, AutoCloseable {
                     cfg.getProperty("username"),
                     cfg.getProperty("password"));
         } catch (Exception e) {
-            LOG.error("Ошибка соединения",e);
+            LOG.error("Ошибка соединения", e);
         }
     }
 
@@ -32,7 +32,7 @@ public class PsqlStore implements Store, AutoCloseable {
     public void save(Post post) {
         try (PreparedStatement preparedStatement =
                      cnn.prepareStatement("insert into post (name, text"
-                             + ", link, created) values(?,?,?,?) on conflict (link) do nothing ",
+                                     + ", link, created) values(?,?,?,?) on conflict (link) do nothing ",
                              Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, post.getTitle());
             preparedStatement.setString(2, post.getDescription());
@@ -61,7 +61,7 @@ public class PsqlStore implements Store, AutoCloseable {
                 }
             }
         } catch (SQLException e) {
-            LOG.error("Ошибка выполнения запроса getAll",e);
+            LOG.error("Ошибка выполнения запроса getAll", e);
         }
         return list;
     }
@@ -78,7 +78,7 @@ public class PsqlStore implements Store, AutoCloseable {
                 }
             }
         } catch (SQLException e) {
-            LOG.error("Ошибка выполнения запроса findById",e);
+            LOG.error("Ошибка выполнения запроса findById", e);
         }
         return post;
     }
@@ -98,7 +98,7 @@ public class PsqlStore implements Store, AutoCloseable {
         }
     }
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         Properties config = new Properties();
         try (InputStream in = PsqlStore.class.getClassLoader().
                 getResourceAsStream("grabber.properties")) {
